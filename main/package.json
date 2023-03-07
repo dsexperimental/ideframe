@@ -1,0 +1,14 @@
+{
+  "name": "ideframe-main",
+  "version": "0.1.0-p1",
+  "description": "idefrom test main process",
+  "main": "./dist/main.js",
+  "scripts": {
+    "tscwin": "..\\node_modules\\.bin\\tsc.cmd -p tsconfig.json",
+    "tsc": "../node_modules/.bin/tsc.cmd -p tsconfig.json"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2"
+  },
+  "author": "Dave Sutter"
+}

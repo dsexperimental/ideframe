@@ -1,0 +1,25 @@
+{
+  "name": "redit-dev",
+  "version": "2.0.0-DEV-VERSION",
+  "description": "Test program for r session",
+  "main": "./dist/base/main.js",
+  "scripts": {
+    "bld-app": "rollup --config --environment NODE_ENV:development"
+  },
+  "type": "module",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^5.0.2",
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "rollup": "^2.60.2",
+    "rollup-plugin-dts": "^4.0.1",
+    "rollup-plugin-ts": "^3.0.2"
+  },
+  "author": "Dave Sutter"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "ideframe",
+  "version": "0.1.0-p1",
+  "description": "dev for ide frame",
+  "main": "./main/dist/main.js",
+  "scripts": {
+    "start-app": "electron ."
+  },
+  "dependencies": {
+    "electron": "~22.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^5.0.2",
+    "typescript": "^4.9.4"
+  },
+  "author": "Dave Sutter"
+}
