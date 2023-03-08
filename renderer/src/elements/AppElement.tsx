@@ -10,7 +10,6 @@ interface AppProp {
     tabFunctions: TabFunctions
 }
 
-
 export function AppElement({menuList, tabStateArray, selectedId, tabFunctions}: AppProp) {
     return (
         <>

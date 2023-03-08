@@ -9,19 +9,20 @@ export interface TabViewProps {
 export interface TabState {
     id: string
     label: string
-    status: string
-    //iconSrc: string
-    getTabElement: (tabState: TabState, isShowing: boolean) => React.ReactNode
+    isDirty: boolean
+    type: string
 }
 
 export interface TabFunctions {
     selectTab: (tabId: string) => void
     closeTab: (tabId: string) => void
+    getTabElement: (tabState: TabState, isShowing: boolean) => React.ReactNode
 }
 
 
 export interface TabFrameProps {
     tabState: TabState
+    tabFunctions: TabFunctions
     showing: boolean
 }
 
@@ -51,6 +52,7 @@ export function TabView({tabStateArray,selectedId,tabFunctions}: TabViewProps) {
                     return <TabFrame
                         key={tabState.id} 
                         tabState={tabState}
+                        tabFunctions={tabFunctions}
                         showing={selectedId == tabState.id}
                     />
                 })}
@@ -84,10 +86,10 @@ function TabTab({tabState, isSelected, tabFunctions}: TabTabProps) {
     )
 }
 
-function TabFrame({tabState, showing}: TabFrameProps) {
+function TabFrame({tabState, tabFunctions, showing}: TabFrameProps) {
     return (
         <div style={{display: showing ? '' : "none"}} className="tabView_frame">
-            {tabState.getTabElement(tabState,showing)}
+            {tabFunctions.getTabElement(tabState,showing)}
         </div>
     )
 }

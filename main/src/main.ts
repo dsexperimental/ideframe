@@ -1,7 +1,7 @@
 import {app, BrowserWindow, dialog, ipcMain} from 'electron'
 import process from 'process'
 import path from 'path'
-import {loadConfig, saveFileAs, saveFile, openFile, OnOpen} from './fileAccess'
+import {saveFileAs, saveFile, openFile} from './fileAccess'
 
 let windows = []
 
@@ -74,22 +74,12 @@ app.on('ready', () => {
     //app startup goes here
 
     console.log("Electron ready")
-    ipcMain.handle('fileAccess:loadConfig',loadConfig)
     ipcMain.handle('fileAccess:saveFileAs',saveFileAs)
     ipcMain.handle('fileAccess:saveFile',saveFile)
-    ipcMain.handle('fileAccess:openFile',openFileWrapper)
-    ipcMain.handle('fileAccess:dummy',dummyWrapper)
+    ipcMain.handle('fileAccess:openFile',openFile)
 
     createWindow(APP_FILE)
 })
-
-function openFileWrapper(event: any) {
-    return openFile(event)
-}
-
-function dummyWrapper(event: any) {
-    return new Promise( (resolve,reject) => { setTimeout(() => resolve(5),5000) })
-}
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {

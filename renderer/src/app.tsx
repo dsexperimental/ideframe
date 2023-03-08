@@ -3,66 +3,98 @@ import * as ReactDom from "react-dom/client"
 import { AppElement } from "./elements/AppElement"
 import { TabState } from "./elements/TabView"
 
+//=============================================
+// app state
+//=============================================
 
-let element = document.querySelector("#editorMD")
-if(element === null ) throw new Error("Document element not found!")
+type DocSession = {
+    id: string
+    lastSavedText?: string
+    filePath?: string
+    isDirty: boolean
+}
 
+let activeDocSession: string | null = null
+let docSessions: Record<string,DocSession> = {}
 
-//===============================================
-let menuList = [{
-    text: "File",
-    items: [
-        { text: "Open", action: () => {
-                window.openSaveApi.openFile().then( (result: any) => { 
-                    if(result !== null) console.log(result) 
-                }).catch(err => console.log(err))
-                openTab() 
+function startDocSession(fileInfo: {data: string, filePath: string} | undefined = undefined) {
+    const id = "ds" + getNewInt()
+    let docSession: DocSession =  {
+        id: id,
+        lastSavedText: fileInfo !== undefined ? fileInfo.data : undefined,
+        filePath: fileInfo !== undefined ? fileInfo.filePath : undefined, 
+        isDirty: false
+    }
+    docSessions[id] = docSession
+    activeDocSession = id
+    renderApp()
+}
+
+//--------------------------------
+
+function closeDocSession(id: string) {
+    if(docSessions[id] !== undefined) {
+        let docSession = docSessions[id]
+        //-- VERIFY DELETE HERE?? --
+        delete docSessions[id]
+        //-- DO DELETE HERE --
+
+        if(activeDocSession == id) {
+            //clumsy way of reading first key - clean this up
+            let firstKey = null
+            for(let key in docSessions) {
+                firstKey = key
+                break
             }
-        },
-        { text: "Save", action: () => {
-            window.openSaveApi.dummy().then( (result: any) => { 
-                console.log(result) 
-            }).catch(err => console.log(err))
-        } },
-        { text: "Quit", action: () => console.log("Quit pressed") }
-    ]
-}]
-
-let selectedId = "tab1"
-
-let tabStateArray: TabState[] = []
-//     {
-//         id: "tab1",
-//         label: "Tab 1",
-//         status: "NA",
-//         //iconSrc: string
-//         getTabElement: (tabState: TabState, isShowing: boolean) => <div>This is tab 1!</div>
-//     },
-//     {
-//         id: "tab2",
-//         label: "Tab 2",
-//         status: "NA",
-//         //iconSrc: string
-//         getTabElement: (tabState: TabState, isShowing: boolean) => <div>This is tab 2!</div>
-//     }
-// ]
-
-
-const tabFunctions = {
-    selectTab: (tabId: string) => {
-        console.log("Tab selected: " + tabId)
-        selectedId = tabId
-        renderApp()
-    },
-    closeTab: (tabId: string) => {
-        console.log("Tab closed: " + tabId)
-        let newTabStateArray: TabState[] = []
-        tabStateArray.forEach(tabState => {
-            if(tabState.id != tabId) newTabStateArray.push(tabState)
-        })
-        tabStateArray = newTabStateArray
+            activeDocSession = firstKey
+        }
         renderApp()
     }
+    else {
+        console.log("Doc Session ID not found: " + id)
+    }
+}
+
+function selectDocSession(id: string) {
+    if(docSessions[id] !== undefined) {
+        activeDocSession = id
+        renderApp()
+    }
+    else {
+        console.log("Doc Session ID not found: " + id)
+    }
+}
+
+function newFile() {
+    startDocSession()
+}
+
+function openFile() {
+    window.openSaveApi.openFile().then( result => { 
+        if(result !== null) {
+            startDocSession(result)
+        } 
+    }).catch(err => {
+        //NEED ERROR HANDLING!
+        console.log(err)
+    })
+}
+
+function saveFile() {
+    if(activeDocSession === null) {
+        console.log("There is no active session")
+        return
+    }
+    let docSession = docSessions[activeDocSession]
+
+    if(docSession.isDirty) {
+        console.log("There is no active session")
+        return
+    }
+}
+
+function saveFileAs() {
+    console.log("Implement this!")
 }
 
 let nextIntVal = 1
@@ -70,31 +102,61 @@ function getNewInt() {
     return nextIntVal++
 }
 
-function openTab() {
-    let tabName = "Tab " + getNewInt()
+//==============================================
+// UI
+//==============================================
 
-    let tabState: TabState = {
-        id: tabName!,
-        label: tabName!,
-        status: "NA",
-        //iconSrc: string
-        getTabElement: (tabState: TabState, isShowing: boolean) => <div>This is tab '{tabName!}'!</div>
-    }
-    tabStateArray = tabStateArray.concat([tabState])
-    renderApp()
+let element = document.querySelector("#editorMD")
+if(element === null ) throw new Error("Document element not found!")
+
+function getTabElement(tabState: TabState, isShowing: boolean) {
+    return <div>This is tab {tabState.id}</div>
+}
+
+let menuList = [{
+    text: "File",
+    items: [
+        { text: "New", action: newFile},
+        { text: "Open", action: openFile},
+        { text: "Save", action: () => saveFile},
+        { text: "Quit", action: () => console.log("Quit pressed") }
+    ]
+}]
+
+const tabFunctions = {
+    selectTab: selectDocSession,
+    closeTab: closeDocSession,
+    getTabElement: getTabElement
 }
 
 let root = ReactDom.createRoot(element)
 
 function renderApp() {
+    const tabStateArray = createTabStateArray()
     const appContent =  (
         <div>
-            <AppElement menuList={menuList} tabStateArray={tabStateArray} selectedId={selectedId} tabFunctions={tabFunctions} />
+            <AppElement menuList={menuList} tabStateArray={tabStateArray} selectedId={activeDocSession} tabFunctions={tabFunctions} />
         </div>
     )
     root.render(appContent) 
 } 
 
+function createTabStateArray() {
+    let tabStateArray: TabState[] = []
+    for(const key in docSessions) {
+        tabStateArray.push(createTabState(docSessions[key]))
+    }
+    return tabStateArray
+}
+
+function createTabState(docSession: DocSession) {
+    return {
+        id: docSession.id,
+        label: docSession.id,
+        isDirty: docSession.isDirty,
+        type: "Rcode"
+    }
+}
 
 //initial render
 renderApp()

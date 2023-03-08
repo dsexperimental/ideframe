@@ -5,7 +5,7 @@ export interface IOpenSaveApi {
   loadConfig: (onOpen: OnOpen) => void
   saveFileAs: (fileMetadata: FileMetaData, data: string, onSave: OnSave) => void,
   saveFile: (fileMetadata: FileMetaData, data: string, onSave: OnSave) => void,
-  openFile: () => Promise<string | null>
+  openFile: () => Promise<{data: string, filePath: string} | null>
   dummy: () => Promise<number>
 }
 
