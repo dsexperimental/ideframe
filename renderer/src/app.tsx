@@ -13,11 +13,17 @@ let menuList = [{
     text: "File",
     items: [
         { text: "Open", action: () => {
-                console.log("Open pressed")
+                window.openSaveApi.openFile().then( (result: any) => { 
+                    if(result !== null) console.log(result) 
+                }).catch(err => console.log(err))
                 openTab() 
             }
         },
-        { text: "Save", action: () => console.log("Save pressed") },
+        { text: "Save", action: () => {
+            window.openSaveApi.dummy().then( (result: any) => { 
+                console.log(result) 
+            }).catch(err => console.log(err))
+        } },
         { text: "Quit", action: () => console.log("Quit pressed") }
     ]
 }]
