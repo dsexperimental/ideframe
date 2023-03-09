@@ -66,9 +66,9 @@ function TabTab({tabState, isSelected, tabFunctions}: TabTabProps) {
     return (
         <div onClick={tabClicked} className={className}>
             {/*<img src={tabState.iconSrc}/>*/}
-            <span>{tabState.label}</span>
+            <span>{tabState.label}</span>&nbsp;
             {/*<input type="image" onClick={closeClicked} src={closeImage}/>*/}  
-            <button onClick={closeClicked}>Close</button>  
+            <button onClick={closeClicked}>X</button>  
         </div>
     )
 }

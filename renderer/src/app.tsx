@@ -118,28 +118,6 @@ function saveFile(doSaveAs: boolean = false) {
   
 }
 
-//---------------------
-// other state objects to pass into app element
-//---------------------
-
-//I should make the contents dynamic, depending on active file
-let menuList = [{
-    text: "File",
-    items: [
-        { text: "New", action: newFile },
-        { text: "Open", action: openFile },
-        { text: "Save", action: saveFile },
-        { text: "Save As", action: saveFileAs },
-        { text: "Quit", action: () => console.log("Quit pressed") }
-    ]
-}]
-
-const tabFunctions: TabFunctions = {
-    selectTab: selectDocSession,
-    closeTab: closeDocSession,
-    getTabElement: getTabElement
-}
-
 //==============================================
 // Utilities
 //==============================================
@@ -186,6 +164,28 @@ function EditorFrame({tabState}:{tabState: TabState}) {
 
 function renderApp() {
     renderAppElement(docSessions,activeSessionId,menuList,tabFunctions)
+}
+
+//---------------------
+// other state objects to pass into app element
+//---------------------
+
+//I should make the contents dynamic, depending on active file
+let menuList = [{
+    text: "File",
+    items: [
+        { text: "New", action: newFile },
+        { text: "Open", action: openFile },
+        { text: "Save", action: saveFile },
+        { text: "Save As", action: saveFileAs },
+        { text: "Quit", action: () => console.log("Quit pressed") }
+    ]
+}]
+
+const tabFunctions: TabFunctions = {
+    selectTab: selectDocSession,
+    closeTab: closeDocSession,
+    getTabElement: getTabElement
 }
 
 //===========================
