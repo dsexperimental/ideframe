@@ -1,24 +1,11 @@
-import * as React from "react"
+import * as React from 'react'
+import { TabState, TabFunctions } from '../appTypes'
 
 export interface TabViewProps {
     selectedId: string  | null
     tabStateArray: TabState[]
     tabFunctions: TabFunctions
 }
-
-export interface TabState {
-    id: string
-    label: string
-    isDirty: boolean
-    type: string
-}
-
-export interface TabFunctions {
-    selectTab: (tabId: string) => void
-    closeTab: (tabId: string) => void
-    getTabElement: (tabState: TabState, isShowing: boolean) => React.ReactNode
-}
-
 
 export interface TabFrameProps {
     tabState: TabState

@@ -1,12 +1,9 @@
 
-import { FileMetaData, OnOpen, OnSave} from "../src/file/ElectronBridgeFileAccess"
 
 export interface IOpenSaveApi {
-  loadConfig: (onOpen: OnOpen) => void
-  saveFileAs: (fileMetadata: FileMetaData, data: string, onSave: OnSave) => void,
-  saveFile: (fileMetadata: FileMetaData, data: string, onSave: OnSave) => void,
+  saveFileAs: (data: string, filePath: string | undefined) => Promise<string>,
+  saveFile: (data: string, filePath: string) => Promise<string>,
   openFile: () => Promise<{data: string, filePath: string} | null>
-  dummy: () => Promise<number>
 }
 
 declare global {

@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { MenuBar } from './MenuBar'
-import { TabView, TabState, TabFunctions } from './TabView'
+import { TabView } from './TabView'
 import { MenuProps} from './SelectMenu'
+import { TabState, TabFunctions } from '../appTypes'
 
 interface AppProp {
     menuList: MenuProps[]
@@ -19,4 +20,3 @@ export function AppElement({menuList, tabStateArray, selectedId, tabFunctions}: 
     )
 
 }
-

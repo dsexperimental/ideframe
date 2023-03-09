@@ -12,7 +12,7 @@ export function saveFileAs(event: any, data: string, filePath: string | undefine
 	fileSavePromise.then( dialogResult => {
 		if((!dialogResult.canceled)&&(dialogResult.filePath)) {
 			const {writeFile} = require('node:fs/promises')
-			return writeFile(filePath, data).then( data => {
+			return writeFile(dialogResult.filePath, data).then( data => {
 				return filePath
 			})
 		}
@@ -23,26 +23,9 @@ export function saveFileAs(event: any, data: string, filePath: string | undefine
 }
 
 export function saveFile(event: any, data: string, filePath: string)  {
-	//====================
-	//maybe remove this
-	let options = {
-		type: "question",
-		message: "Save to file location: " + filePath + "?",
-		buttons: ["OK","Cancel"]
-	}
-	var fileOpenPromise = dialog.showMessageBox(options)
-	//====================
-
-	fileOpenPromise.then( result => {
-		if(result.response == 0) {
-			const {writeFile} = require('node:fs/promises')
-			return writeFile(filePath, data).then( data => {
-				return filePath
-			})
-		}
-		else {
-			return Promise.resolve(null)
-		}
+	const {writeFile} = require('node:fs/promises')
+	return writeFile(filePath, data).then( data => {
+		return filePath
 	})
 }
 
